@@ -20,4 +20,7 @@ public class AnimeController {
         TimeUnit.SECONDS.sleep(1);
         return List.of("One piece", "Naruto", "HXH");
     }
+
+
+
 }
