@@ -5,8 +5,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 @RestController
 @RequestMapping("v1/animes")
@@ -15,8 +15,9 @@ public class AnimeController {
 
 
     @GetMapping
-    public List<String>  ListAll() {
+    public List<String> ListAll() throws InterruptedException {
         log.info(Thread.currentThread().getName());
-       return List.of("One piece", "Naruto","HXH");
+        TimeUnit.SECONDS.sleep(1);
+        return List.of("One piece", "Naruto", "HXH");
     }
 }
