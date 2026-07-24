@@ -1,7 +1,9 @@
 package academy.devdojo.domain;
 
-import java.util.List;
+import lombok.Getter;
 
+import java.util.List;
+@Getter
 public class Anime {
     long id;
     String name;
@@ -11,10 +13,14 @@ public class Anime {
         this.name = name;
     }
 
-    private static final List<Anime> Anime = List.of();
-    public static void main(String[] args) {
+
+    public static  List<Anime> listarAnime(){
         Anime anime = new Anime(1,"naruto");
         Anime anime2 = new Anime(2,"one piece");
+
+        return List.of(anime,anime2);
     }
+
+
 
 }

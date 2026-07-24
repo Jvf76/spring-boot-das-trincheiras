@@ -1,12 +1,12 @@
 package academy.devdojo.controller;
 
+import academy.devdojo.domain.Anime;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.concurrent.TimeUnit;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("v1/animes")
@@ -21,6 +21,21 @@ public class AnimeController {
         return List.of("One piece", "Naruto", "HXH");
     }
 
+    @GetMapping("/lista")
+    public List<Anime> listarAnime(@RequestParam String name){
+        return Anime.listarAnime()
+                .stream()
+                .filter(anime -> anime.getName().equalsIgnoreCase(name))
+                .toList();
+    }
+
+    @GetMapping("/{id}")
+    public Optional<Anime> buscarId(@PathVariable long id){
+        return Anime.listarAnime()
+                .stream()
+                .filter(anime -> anime.getId() == id)
+                .findFirst();
+    }
 
 
 }

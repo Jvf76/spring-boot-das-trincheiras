@@ -18,7 +18,7 @@ public class HeroController {
     }
 
     @GetMapping("filterList")
-    public List<String> listHeroesParamList(@RequestParam List<String>  names){
+    public List<String> listHeroesParamList(@RequestParam List<String> names){
         return HEROES.stream().filter(names::contains).toList();
     }
 
