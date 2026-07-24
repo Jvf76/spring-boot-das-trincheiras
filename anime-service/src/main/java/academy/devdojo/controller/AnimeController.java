@@ -22,7 +22,7 @@ public class AnimeController {
     }
 
     @GetMapping("/lista")
-    public List<Anime> listarAnime(@RequestParam String name){
+    public List<Anime> listarAnime(@RequestParam (required = false) String name){
         return Anime.listarAnime()
                 .stream()
                 .filter(anime -> anime.getName().equalsIgnoreCase(name))
@@ -30,11 +30,11 @@ public class AnimeController {
     }
 
     @GetMapping("/{id}")
-    public Optional<Anime> buscarId(@PathVariable long id){
+    public Anime findById(@PathVariable Long id){
         return Anime.listarAnime()
                 .stream()
-                .filter(anime -> anime.getId() == id)
-                .findFirst();
+                .filter(anime -> anime.getId().equals(id))
+                .findFirst().orElse(null);
     }
 
 

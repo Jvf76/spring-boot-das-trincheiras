@@ -5,7 +5,7 @@ import lombok.Getter;
 import java.util.List;
 @Getter
 public class Anime {
-    long id;
+    Long id;
     String name;
 
     public Anime(long id, String name){
