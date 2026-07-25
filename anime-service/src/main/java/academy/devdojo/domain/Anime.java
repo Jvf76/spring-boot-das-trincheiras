@@ -1,9 +1,13 @@
 package academy.devdojo.domain;
 
 import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
+import java.util.ArrayList;
 import java.util.List;
 @Getter
+@Setter
 public class Anime {
     Long id;
     String name;
@@ -13,12 +17,11 @@ public class Anime {
         this.name = name;
     }
 
+    private static final List<Anime> ANIMES = new ArrayList<>();
+
 
     public static  List<Anime> listarAnime(){
-        Anime anime = new Anime(1,"naruto");
-        Anime anime2 = new Anime(2,"one piece");
-
-        return List.of(anime,anime2);
+        return ANIMES;
     }
 
 

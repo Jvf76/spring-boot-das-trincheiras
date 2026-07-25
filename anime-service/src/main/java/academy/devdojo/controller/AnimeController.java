@@ -4,7 +4,9 @@ import academy.devdojo.domain.Anime;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.ThreadLocalRandom;
 import java.util.concurrent.TimeUnit;
 import java.util.Optional;
 
@@ -14,15 +16,16 @@ import java.util.Optional;
 public class AnimeController {
 
 
-    @GetMapping
-    public List<String> ListAll() throws InterruptedException {
-        log.info(Thread.currentThread().getName());
-        TimeUnit.SECONDS.sleep(1);
-        return List.of("One piece", "Naruto", "HXH");
+    @PostMapping
+    public Anime post(@RequestBody Anime anime) {
+        long idAleat = ThreadLocalRandom.current().nextLong(1,1000);
+        anime.setId(idAleat);
+        Anime.listarAnime().add(anime);
+        return anime;
     }
 
     @GetMapping("/lista")
-    public List<Anime> listarAnime(@RequestParam (required = false) String name){
+    public List<Anime> listarAnime(@RequestParam(required = false) String name) {
         return Anime.listarAnime()
                 .stream()
                 .filter(anime -> anime.getName().equalsIgnoreCase(name))
@@ -30,7 +33,7 @@ public class AnimeController {
     }
 
     @GetMapping("/{id}")
-    public Anime findById(@PathVariable Long id){
+    public Anime findById(@PathVariable Long id) {
         return Anime.listarAnime()
                 .stream()
                 .filter(anime -> anime.getId().equals(id))
