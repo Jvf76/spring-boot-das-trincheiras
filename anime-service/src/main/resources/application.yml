@@ -11,6 +11,7 @@ server:
     context-path: /
   error:
     include-stacktrace: on_param
+    include-message: always
   tomcat:
     threads:
       max: 20

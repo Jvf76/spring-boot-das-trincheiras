@@ -18,8 +18,8 @@ public class AnimeController {
 
     @PostMapping
     public Anime post(@RequestBody Anime anime) {
-        long idAleat = ThreadLocalRandom.current().nextLong(1,1000);
-        anime.setId(idAleat);
+        long idAleatorio = ThreadLocalRandom.current().nextLong(1,1000);
+        anime.setId(idAleatorio);
         Anime.listarAnime().add(anime);
         return anime;
     }
