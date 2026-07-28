@@ -4,7 +4,9 @@ import academy.devdojo.domain.Anime;
 import academy.devdojo.domain.Producer;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -30,15 +32,14 @@ public class ProducerController {
                 .toList();
     }
 
-    @PostMapping(produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE, headers = "x-api-key=1234")
-    public Producer post(@RequestBody Producer producer, @RequestHeader HttpHeaders headers) {
-        log.info("{}",headers);
-        long idAleatorio = ThreadLocalRandom.current().nextLong(1, 1000);
-
-        producer.setId(idAleatorio);
+    @PostMapping(produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE, headers = "x-api-key")
+    public ResponseEntity<Producer> save(@RequestBody Producer producer, @RequestHeader HttpHeaders headers) {
+        log.info("{}", headers);
+        producer.setId(ThreadLocalRandom.current().nextLong(100_000));
         Producer.getProducers().add(producer);
-
-        return producer;
+        var responseHeaders = new HttpHeaders();
+        responseHeaders.add("Authorization","My key");
+        return ResponseEntity.status(HttpStatus.CREATED).headers(responseHeaders).body(producer);
     }
 
     @GetMapping("/{id}")
