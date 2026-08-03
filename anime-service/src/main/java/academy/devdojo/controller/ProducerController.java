@@ -11,9 +11,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.time.LocalDateTime;
 import java.util.List;
-import java.util.concurrent.ThreadLocalRandom;
 
 @RestController
 @RequestMapping("v1/producers")
@@ -45,10 +43,9 @@ public class ProducerController {
 
     @PostMapping(produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE, headers = "x-api-key")
     public ResponseEntity<ProducerGetResponse> save(@RequestBody ProducerPostRequest producerPostRequest, @RequestHeader HttpHeaders headers) {
-        Producer producer1 = Mapper.toProducer(producerPostRequest);
         log.info("{}", headers);
-        var producer = Mapper.toProducer(producerPostRequest);
-        var response = Mapper.toProductGetResponse(producer);
+        var producer = Mapper.toProducer(producerPostRequest);//o mapper transforma um objeto producerPostRequest em um objeto producer
+        var response = Mapper.toProductGetResponse(producer);// o mapper transforma um objeto producer  em um objeto producerGetResponse
 
         Producer.getProducers().add(producer);
         return ResponseEntity.status(HttpStatus.CREATED).body(response);

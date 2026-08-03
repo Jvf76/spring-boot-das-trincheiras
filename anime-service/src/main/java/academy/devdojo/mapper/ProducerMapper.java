@@ -16,5 +16,5 @@ public interface ProducerMapper {
     @Mapping(target = "id", expression = "java(java.util.concurrent.ThreadLocalRandom.current().nextLong(100_000))")
     Producer toProducer(ProducerPostRequest postRequest);
 
-    ProducerGetResponse toProductGetResponse(Producer producer);
+    ProducerGetResponse toProductGetResponse(Producer producer);// recebe um producer e devolve um producerGetResponse
 }

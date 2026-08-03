@@ -1,44 +1,52 @@
 package academy.devdojo.controller;
 
 import academy.devdojo.domain.Anime;
+import academy.devdojo.mapper.AnimeMapper;
+import academy.devdojo.request.AnimePostRequest;
+import academy.devdojo.response.AnimePostResponse;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
-import java.util.concurrent.TimeUnit;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("v1/animes")
 @Slf4j
 public class AnimeController {
+    private static final AnimeMapper MAPPER = AnimeMapper.INSTANCE;
+
+    @GetMapping
+    public ResponseEntity<List<AnimePostResponse>> listAll(@RequestParam(required = false) String name) {
+        log.debug("Request received to list all animes, param name'{}'", name);
+        var animes = Anime.getAnimes();
+        var animeGetResponseList = MAPPER.toAnimeGetResponseList(animes);
+        if (name == null) return ResponseEntity.ok(animeGetResponseList);
+
+        var response = animeGetResponseList.stream().filter(anime -> anime.getName().equalsIgnoreCase(name)).toList();
+        return ResponseEntity.ok(response);
+    }
+
+    @GetMapping("{id}")
+    public ResponseEntity<AnimePostResponse> findById(@PathVariable Long id) {
+        log.debug("request to find anime by id: {}", id);
+        var animeGetResponse = Anime.getAnimes()
+                .stream()//passar por cada processo um por um, passa por cada anime um de cada vez
+                .filter(anime -> anime.getId().equals(id))//so deixa passar se o id do anime for exatamente igual ao que está procurando
+                .findFirst()//ele pega o primeiro anime que passou pelo filtro anterior e retorna um optional<anime>
+                .map(MAPPER::toAnimeGetResponse)//transforma o tipo de dado se a caixa do optinonal nao estiver vazia
+                .orElse(null);//entrega o resultado final, se estiver vazio entrega null
+        return ResponseEntity.ok(animeGetResponse);
+    }
 
 
     @PostMapping
-    public Anime post(@RequestBody Anime anime) {
-        long idAleatorio = ThreadLocalRandom.current().nextLong(1,1000);
-        anime.setId(idAleatorio);
-        Anime.listarAnime().add(anime);
-        return anime;
+    public ResponseEntity<AnimePostResponse> save(@RequestBody AnimePostRequest request) {
+        log.debug("Request to save anime : {} ", request);
+        request.setId(ThreadLocalRandom.current().nextLong(100_000));
+//        Anime.getAnimes().add(request);
+//        return request;
     }
-
-    @GetMapping("/lista")
-    public List<Anime> listarAnime(@RequestParam(required = false) String name) {
-        return Anime.listarAnime()
-                .stream()
-                .filter(anime -> anime.getName().equalsIgnoreCase(name))
-                .toList();
-    }
-
-    @GetMapping("/{id}")
-    public Anime findById(@PathVariable Long id) {
-        return Anime.listarAnime()
-                .stream()
-                .filter(anime -> anime.getId().equals(id))
-                .findFirst().orElse(null);
-    }
-
 
 }
