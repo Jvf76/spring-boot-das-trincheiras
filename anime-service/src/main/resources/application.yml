@@ -6,7 +6,7 @@ spring:
       enabled: true
 logging:
   level:
-    root: debug
+    academy.devdojo: debug
 
 server:
   servlet:

@@ -2,6 +2,7 @@ package academy.devdojo.mapper;
 
 import academy.devdojo.domain.Anime;
 import academy.devdojo.request.AnimePostRequest;
+import academy.devdojo.response.AnimeGetResponse;
 import academy.devdojo.response.AnimePostResponse;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
@@ -21,6 +22,6 @@ public interface AnimeMapper {
 
     AnimePostResponse toAnimeGetResponse(Anime anime);// recebe um objeto anime e devolve um objeto animeGetResponse
 
-    List<AnimePostResponse> toAnimeGetResponseList(List<Anime> animes);
+    List<AnimeGetResponse> toAnimeGetResponseList(List<Anime> animes);
 
 }
