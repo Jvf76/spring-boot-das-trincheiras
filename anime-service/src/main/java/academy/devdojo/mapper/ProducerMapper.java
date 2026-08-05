@@ -1,9 +1,7 @@
 package academy.devdojo.mapper;
 
-import academy.devdojo.domain.Anime;
 import academy.devdojo.domain.Producer;
 import academy.devdojo.request.ProducerPostRequest;
-import academy.devdojo.response.ProducerGetResponse;
 import academy.devdojo.response.ProducerGetResponse;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
@@ -21,6 +19,7 @@ public interface ProducerMapper {
     Producer toProducer(ProducerPostRequest postRequest);
 
     ProducerGetResponse toProducerGetResponse(Producer producer);// recebe um producer e devolve um producerGetResponse
+
     List<ProducerGetResponse> toProducerGetResponseList(List<Producer> producers);
 
 

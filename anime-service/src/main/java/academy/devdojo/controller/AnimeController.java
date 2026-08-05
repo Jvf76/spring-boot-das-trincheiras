@@ -9,9 +9,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
-import java.util.concurrent.ThreadLocalRandom;
 
 @RestController
 @RequestMapping("v1/animes")
@@ -38,7 +38,7 @@ public class AnimeController {
                 .filter(anime -> anime.getId().equals(id))//so deixa passar se o id do anime for exatamente igual ao que está procurando
                 .findFirst()//ele pega o primeiro anime que passou pelo filtro anterior e retorna um optional<anime>
                 .map(MAPPER::toAnimeGetResponse)//transforma o tipo de dado se a caixa do optinonal nao estiver vazia
-                .orElse(null);//entrega o resultado final, se estiver vazio entrega null
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Anime not Found"));
         return ResponseEntity.ok(animeGetResponse);
     }
 
