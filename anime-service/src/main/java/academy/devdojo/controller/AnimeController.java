@@ -31,7 +31,7 @@ public class AnimeController {
     }
 
     @GetMapping("{id}")
-    public ResponseEntity<AnimePostResponse> findById(@PathVariable Long id) {
+    public ResponseEntity<AnimeGetResponse> findById(@PathVariable Long id) {
         log.debug("request to find anime by id: {}", id);
         var animeGetResponse = Anime.getAnimes()
                 .stream()//passar por cada processo um por um, passa por cada anime um de cada vez

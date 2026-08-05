@@ -20,7 +20,7 @@ public interface AnimeMapper {
 
     AnimePostResponse toAnimePostResponse(Anime anime);
 
-    AnimePostResponse toAnimeGetResponse(Anime anime);// recebe um objeto anime e devolve um objeto animeGetResponse
+    AnimeGetResponse toAnimeGetResponse(Anime anime);// recebe um objeto anime e devolve um objeto animeGetResponse
 
     List<AnimeGetResponse> toAnimeGetResponseList(List<Anime> animes);
 
