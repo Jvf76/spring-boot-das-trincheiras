@@ -6,7 +6,7 @@ import lombok.Getter;
 
 @Builder
 @Getter
-public class AnimePutResponse {
+public class ProducerPutRequest {
     private Long id;
     private String name;
 

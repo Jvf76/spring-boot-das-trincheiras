@@ -3,7 +3,7 @@ package academy.devdojo.controller;
 import academy.devdojo.domain.Anime;
 import academy.devdojo.mapper.AnimeMapper;
 import academy.devdojo.request.AnimePostRequest;
-import academy.devdojo.request.AnimePutResponse;
+import academy.devdojo.request.AnimePutRequest;
 import academy.devdojo.response.AnimeGetResponse;
 import academy.devdojo.response.AnimePostResponse;
 import lombok.extern.slf4j.Slf4j;
@@ -69,7 +69,7 @@ public class AnimeController {
     }
 
     @PutMapping
-    public ResponseEntity<Void> update(@RequestBody AnimePutResponse request){
+    public ResponseEntity<Void> update(@RequestBody AnimePutRequest request){
         log.debug("Requeste to update anime by id: {}",request);
         var animeToRemove = Anime.getAnimes()
                 .stream()
