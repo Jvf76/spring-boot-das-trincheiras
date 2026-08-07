@@ -42,5 +42,6 @@ public class ProducerHardCodedRepository {
     public Producer update(Producer producer){
         delete(producer);
         save(producer);
+        return producer;
     }
 }
