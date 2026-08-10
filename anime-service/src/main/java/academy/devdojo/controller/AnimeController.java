@@ -6,6 +6,7 @@ import academy.devdojo.request.AnimePostRequest;
 import academy.devdojo.request.AnimePutRequest;
 import academy.devdojo.response.AnimeGetResponse;
 import academy.devdojo.response.AnimePostResponse;
+import academy.devdojo.service.AnimeService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -19,66 +20,54 @@ import java.util.List;
 @Slf4j
 public class AnimeController {
     private static final AnimeMapper MAPPER = AnimeMapper.INSTANCE;
+    private AnimeService service;
 
     @GetMapping
     public ResponseEntity<List<AnimeGetResponse>> listAll(@RequestParam(required = false) String name) {
-        log.debug("Request received to list all animes, param name'{}'", name);
-        var animes = Anime.getAnimes();
-        var animeGetResponseList = MAPPER.toAnimeGetResponseList(animes);
-        if (name == null) return ResponseEntity.ok(animeGetResponseList);
 
-        var response = animeGetResponseList.stream().filter(anime -> anime.getName().equalsIgnoreCase(name)).toList();
+        var animes = service.findAll(name);
+        var response = MAPPER.toAnimeGetResponseList(animes);
         return ResponseEntity.ok(response);
     }
 
     @GetMapping("{id}")
     public ResponseEntity<AnimeGetResponse> findById(@PathVariable Long id) {
-        log.debug("request to find anime by id: {}", id);
-        var animeGetResponse = Anime.getAnimes()
-                .stream()//passar por cada processo um por um, passa por cada anime um de cada vez
-                .filter(anime -> anime.getId().equals(id))//so deixa passar se o id do anime for exatamente igual ao que está procurando
-                .findFirst()//ele pega o primeiro anime que passou pelo filtro anterior e retorna um optional<anime>
-                .map(MAPPER::toAnimeGetResponse)//transforma o tipo de dado se a caixa do optinonal nao estiver vazia
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Anime not Found"));
-        return ResponseEntity.ok(animeGetResponse);
+
+        var animes = service.findByIdOrThrowNotFound(id);
+
+        var response = MAPPER.toAnimeGetResponse(animes);
+
+        return ResponseEntity.ok(response);
     }
 
 
     @PostMapping
-    public ResponseEntity<AnimePostResponse> save(@RequestBody AnimePostRequest request) {
-        log.debug("Request to save anime : {} ", request);
-        var anime = MAPPER.toAnime(request);
+    public ResponseEntity<AnimePostResponse> save(@RequestBody AnimePostRequest animePostRequest) {
 
-        Anime.getAnimes().add(anime);
+        var animes = MAPPER.toAnime(animePostRequest);
 
-        var response = MAPPER.toAnimePostResponse(anime);
+        var response = MAPPER.toAnimePostResponse(animes);
 
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
     @DeleteMapping("{id}")
-    public ResponseEntity<Void> deleteById(@PathVariable Long id){
-        log.debug("Requeste to delete anime by id: {}",id);
-        var animeToDelete = Anime.getAnimes()
-                .stream()
-                .filter(anime -> anime.getId().equals(id))
-                .findFirst()
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Anime not Found"));
-        Anime.getAnimes().remove(animeToDelete);
+    public ResponseEntity<Void> deleteById(@PathVariable Long id) {
+        log.debug("Request to delete anime by id: {}", id);
+
+        service.delete(id);
+
         return ResponseEntity.noContent().build();
     }
 
     @PutMapping
-    public ResponseEntity<Void> update(@RequestBody AnimePutRequest request){
-        log.debug("Requeste to update anime by id: {}",request);
-        var animeToRemove = Anime.getAnimes()
-                .stream()
-                .filter(anime -> anime.getId().equals(request.getId()))
-                .findFirst()
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Anime not Found"));
+    public ResponseEntity<Void> update(@RequestBody AnimePutRequest request) {
+        log.debug("Request to update anime by id: {}", request);
+
+
         var animeUpdated = MAPPER.toAnime(request);
-        Anime.getAnimes().remove(animeToRemove);
-        Anime.getAnimes().add(animeUpdated);
+        service.update(animeUpdated);
+
         return ResponseEntity.noContent().build();
     }
 

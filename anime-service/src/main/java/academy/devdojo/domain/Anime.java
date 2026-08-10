@@ -17,11 +17,9 @@ public class Anime {
     Long id;
     String name;
 
-    @Getter
+
     private static final List<Anime> animes = new ArrayList<>();
 
-    public static List<Anime> listarAnime() {
-        return animes;
-    }
+
 
 }
