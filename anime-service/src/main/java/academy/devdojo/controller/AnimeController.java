@@ -7,6 +7,7 @@ import academy.devdojo.request.AnimePutRequest;
 import academy.devdojo.response.AnimeGetResponse;
 import academy.devdojo.response.AnimePostResponse;
 import academy.devdojo.service.AnimeService;
+import academy.devdojo.service.ProducerService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -22,11 +23,18 @@ public class AnimeController {
     private static final AnimeMapper MAPPER = AnimeMapper.INSTANCE;
     private AnimeService service;
 
+    public AnimeController() {
+        this.service = new AnimeService();
+    }
+
+
     @GetMapping
     public ResponseEntity<List<AnimeGetResponse>> listAll(@RequestParam(required = false) String name) {
 
-        var animes = service.findAll(name);
-        var response = MAPPER.toAnimeGetResponseList(animes);
+        var animesList = service.findAll(name);
+
+        var response = MAPPER.toAnimeGetResponseList(animesList);
+
         return ResponseEntity.ok(response);
     }
 
@@ -46,7 +54,9 @@ public class AnimeController {
 
         var animes = MAPPER.toAnime(animePostRequest);
 
-        var response = MAPPER.toAnimePostResponse(animes);
+        var animeSaved = service.save(animes);
+
+        var response = MAPPER.toAnimePostResponse(animeSaved);
 
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }

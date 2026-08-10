@@ -33,8 +33,8 @@ public class AnimeService {
     }
 
     public Anime update(Anime animeToUpdate){
-        var anime = findByIdOrThrowNotFound(animeToUpdate.getId());
-        return repository.update(anime);
+        findByIdOrThrowNotFound(animeToUpdate.getId());
+        return repository.update(animeToUpdate);
     }
 
 

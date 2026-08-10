@@ -16,10 +16,4 @@ public class Anime {
     @EqualsAndHashCode.Include
     Long id;
     String name;
-
-
-    private static final List<Anime> animes = new ArrayList<>();
-
-
-
 }
