@@ -1,6 +1,9 @@
 package academy.devdojo.repository;
 
 import academy.devdojo.domain.Producer;
+import academy.devdojo.external.dependency.Connection;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Repository;
 
 import java.time.LocalDateTime;
@@ -9,8 +12,11 @@ import java.util.List;
 import java.util.Optional;
 
 @Repository
+@RequiredArgsConstructor
+@Log4j2
 public class ProducerHardCodedRepository {
     private static final List<Producer> PRODUCERS = new ArrayList<>();
+    private final Connection connection;
 
     static {
         var mappa = Producer.builder().id(1L).name("Mappa").createdAt(LocalDateTime.now()).build();
@@ -19,29 +25,31 @@ public class ProducerHardCodedRepository {
         PRODUCERS.addAll(List.of(mappa, kyotoAnimation, madhouse));
     }
 
-    public List<Producer> findAll(){
+    public List<Producer> findAll() {
         return PRODUCERS;
     }
 
-    public Optional<Producer> findById(Long id){
+    public Optional<Producer> findById(Long id) {
+        log.debug(connection);
         return PRODUCERS.stream().filter(producer -> producer.getId().equals(id)).findFirst();
     }
 
-    public List<Producer> findByName(String name){
+    public List<Producer> findByName(String name) {
         return PRODUCERS.stream()
                 .filter(producer -> producer.getName().equalsIgnoreCase(name))
                 .toList();
     }
-    public Producer save(Producer producer){
+
+    public Producer save(Producer producer) {
         PRODUCERS.add(producer);
         return producer;
     }
 
-    public void delete(Producer producer){
+    public void delete(Producer producer) {
         PRODUCERS.remove(producer);
     }
 
-    public Producer update(Producer producer){
+    public Producer update(Producer producer) {
         delete(producer);
         save(producer);
         return producer;

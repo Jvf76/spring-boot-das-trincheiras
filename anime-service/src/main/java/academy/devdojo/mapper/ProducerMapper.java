@@ -24,7 +24,6 @@ public interface ProducerMapper {
 
     ProducerGetResponse toProducerGetResponse(Producer producer);// recebe um producer e devolve um producerGetResponse
 
-    Producer toProducer(Producer producerToRemove);
 
     List<ProducerGetResponse> toProducerGetResponseList(List<Producer> producers);
 
