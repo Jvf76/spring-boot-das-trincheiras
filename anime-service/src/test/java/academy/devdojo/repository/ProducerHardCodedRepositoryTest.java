@@ -4,18 +4,17 @@ import academy.devdojo.domain.Producer;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.BDDMockito;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.cglib.core.Local;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 @ExtendWith(MockitoExtension.class)
 class ProducerHardCodedRepositoryTest {
@@ -35,9 +34,9 @@ class ProducerHardCodedRepositoryTest {
     }
 
 
-
     @Test
     @DisplayName("findAll return a list with all producers")
+    @Order(1)
     void findAll_ReturnsAllProducers_WhenSuccessful() {
         BDDMockito.when(producerData.getProducers()).thenReturn(producerList);
 
@@ -47,6 +46,7 @@ class ProducerHardCodedRepositoryTest {
 
     @Test
     @DisplayName("findAll return a producers witch given id")
+    @Order(2)
     void findById_ReturnsAllProducersById_WhenSuccessful() {
         BDDMockito.when(producerData.getProducers()).thenReturn(producerList);
         var expectedProducer = producerList.getFirst();
@@ -56,6 +56,7 @@ class ProducerHardCodedRepositoryTest {
 
     @Test
     @DisplayName("findByName return empty producers when name is null")
+    @Order(3)
     void findById_ReturnsEmptyList_WhenNameIsNull() {
         BDDMockito.when(producerData.getProducers()).thenReturn(producerList);
 
@@ -65,7 +66,8 @@ class ProducerHardCodedRepositoryTest {
 
     @Test
     @DisplayName("findByName return empty producers when name is null")
-    void findById_ReturnsFoundProducerInList_WhenNameIsFound() {
+    @Order(4)
+    void findByName_ReturnsFoundProducerInList_WhenNameIsFound() {
         BDDMockito.when(producerData.getProducers()).thenReturn(producerList);
         var expectedProducer = producerList.getFirst();
 
@@ -75,17 +77,52 @@ class ProducerHardCodedRepositoryTest {
 
     @Test
     @DisplayName("findByName return empty producers when name is null")
+    @Order(5)
     void save_CreatesProducer_WhenSucessful() {
         BDDMockito.when(producerData.getProducers()).thenReturn(producerList);
 
-        var producersToSave = Producer.builder().id(99L).name("MAPPA").createdAt(LocalDateTime.now()).build();
-        var producer = repository.save(producersToSave);
+        var producersToSave = Producer.builder().id(99L).name("MAPPA").createdAt(LocalDateTime.now()).build(); // cria o producer
+        var producer = repository.save(producersToSave); // salva o producer que ficou em producersToSave
 
-        Assertions.assertThat(producer).isEqualTo(producersToSave).hasNoNullFieldsOrProperties();
+        Assertions.assertThat(producer).isEqualTo(producersToSave).hasNoNullFieldsOrProperties();// verifica producers, confirma se é igual ao producerToSave
 
         var producerSavedOptional = repository.findById(producersToSave.getId());
         Assertions.assertThat(producerSavedOptional).isPresent().contains(producersToSave);
 
     }
 
+    @Test
+    @DisplayName("delete remove producer")
+    @Order(6)
+    void Delete_UpdateProducer_WhenSuccessful() {
+        BDDMockito.when(producerData.getProducers()).thenReturn(producerList);
+
+        var producerToDelete = producerList.getFirst();
+        repository.delete(producerToDelete);
+
+        var producers = repository.findAll();
+
+        Assertions.assertThat(producers).isNotEmpty().doesNotContain(producerToDelete);
+    }
+
+
+    @Test
+    @DisplayName("update producer")
+    @Order(7)
+    void update_CreatesProducer_WhenSucessful() {
+        BDDMockito.when(producerData.getProducers()).thenReturn(producerList);
+
+        var producerToUpdate = this.producerList.getFirst();
+        producerToUpdate.setName("Aniplex");
+
+        repository.update(producerToUpdate);
+
+        Assertions.assertThat(this.producerList).contains(producerToUpdate);
+
+        var produceUpdatedOptional = repository.findById(producerToUpdate.getId());
+        Assertions.assertThat(produceUpdatedOptional).isPresent();
+        Assertions.assertThat(produceUpdatedOptional.get().getName()).isEqualTo(producerToUpdate.getName());
+    }
+
 }
+
