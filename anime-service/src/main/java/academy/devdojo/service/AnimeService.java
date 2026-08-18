@@ -1,7 +1,7 @@
 package academy.devdojo.service;
 
 import academy.devdojo.domain.Anime;
-import academy.devdojo.repository.AnimeRepository;
+import academy.devdojo.repository.AnimeHardCodedRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -12,7 +12,7 @@ import java.util.List;
 @Service
 @RequiredArgsConstructor
 public class AnimeService {
-    private final AnimeRepository repository;
+    private final AnimeHardCodedRepository repository;
 
 
 
