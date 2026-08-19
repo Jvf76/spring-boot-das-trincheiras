@@ -55,7 +55,7 @@ class ProducerHardCodedRepositoryTest {
     }
 
     @Test
-    @DisplayName("findByName return empty producers when name is null")
+    @DisplayName("findByName return empty list when name is null")
     @Order(3)
     void findById_ReturnsEmptyList_WhenNameIsNull() {
         BDDMockito.when(producerData.getProducers()).thenReturn(producerList);
@@ -65,7 +65,7 @@ class ProducerHardCodedRepositoryTest {
     }
 
     @Test
-    @DisplayName("findByName return empty producers when name is null")
+    @DisplayName("findByName return empty producers when name exists")
     @Order(4)
     void findByName_ReturnsFoundProducerInList_WhenNameIsFound() {
         BDDMockito.when(producerData.getProducers()).thenReturn(producerList);
