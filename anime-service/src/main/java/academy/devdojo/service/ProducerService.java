@@ -40,5 +40,4 @@ public class ProducerService {
         producerToUpdate.setCreatedAt(producer.getCreatedAt());
         return repository.update(producerToUpdate);
     }
-
 }
