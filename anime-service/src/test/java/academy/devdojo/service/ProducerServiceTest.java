@@ -114,15 +114,13 @@ class ProducerServiceTest {
     @Test
     @DisplayName("delete remove producer")
     @Order(6)
-    void Delete_UpdateProducer_WhenSuccessful() {
+    void delete_RemoveProducer_WhenSuccessful() {
         var producerToDelete = producerList.getFirst();
         BDDMockito.when(repository.findById(producerToDelete.getId())).thenReturn(Optional.of(producerToDelete));
+        BDDMockito.doNothing().when(repository).delete(producerToDelete);
 
-        repository.delete(producerToDelete);
 
-        var producers = repository.findAll();
-
-        Assertions.assertThat(producers).isNotEmpty().doesNotContain(producerToDelete);
+        Assertions.assertThatNoException().isThrownBy(() -> service.delete(producerToDelete.getId()));
     }
 
 }
