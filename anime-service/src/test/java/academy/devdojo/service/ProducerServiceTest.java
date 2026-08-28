@@ -105,7 +105,7 @@ class ProducerServiceTest {
 
         BDDMockito.when(repository.save(producersToSave)).thenReturn(producersToSave);
 
-        var savedProducer = repository.save(producersToSave); // salva o producer que ficou em producersToSave
+        var savedProducer = service.save(producersToSave); // salva o producer que ficou em producersToSave
 
         Assertions.assertThat(savedProducer).isEqualTo(producersToSave).hasNoNullFieldsOrProperties();// verifica producers, confirma se é igual ao producerToSave
 
@@ -113,7 +113,7 @@ class ProducerServiceTest {
 
     @Test
     @DisplayName("delete remove producer")
-    @Order(6)
+    @Order(7)
     void delete_RemoveProducer_WhenSuccessful() {
         var producerToDelete = producerList.getFirst();
         BDDMockito.when(repository.findById(producerToDelete.getId())).thenReturn(Optional.of(producerToDelete));
@@ -121,6 +121,34 @@ class ProducerServiceTest {
 
 
         Assertions.assertThatNoException().isThrownBy(() -> service.delete(producerToDelete.getId()));
+    }
+
+    @Test
+    @DisplayName("delete remove producer")
+    @Order(8)
+    void delete_ThrowResponseStatusException_WhenProducerIsNotFound() {
+        var producerToDelete = producerList.getFirst();
+        BDDMockito.when(repository.findById(producerToDelete.getId())).thenReturn(Optional.empty());
+
+        Assertions.assertThatException()
+                .isThrownBy(() -> service.delete(producerToDelete.getId()))
+                .isInstanceOf(ResponseStatusException.class);
+
+    }
+
+
+    @Test
+    @DisplayName("update producer")
+    @Order(9)
+    void update_UpdateProducer_WhenSucessful() {
+        var producerToUpdate = producerList.getFirst();
+        producerToUpdate.setName("Aniplex");
+
+        BDDMockito.when(repository.findById(producerToUpdate.getId())).thenReturn(Optional.of(producerToUpdate));
+        BDDMockito.doNothing().when(repository).update(producerToUpdate);
+
+        Assertions.assertThatNoException().isThrownBy(() -> service.update(producerToUpdate));
+
     }
 
 }

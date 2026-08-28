@@ -45,9 +45,8 @@ public class ProducerHardCodedRepository {
         producerData.getProducers().remove(producer);
     }
 
-    public Producer update(Producer producer) {
+    public void update(Producer producer) {
         delete(producer);
         save(producer);
-        return producer;
     }
 }
