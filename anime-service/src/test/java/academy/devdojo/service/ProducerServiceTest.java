@@ -105,7 +105,7 @@ class ProducerServiceTest {
 
         BDDMockito.when(repository.save(producersToSave)).thenReturn(producersToSave);
 
-        var savedProducer = service.save(producersToSave); // salva o producer que ficou em producersToSave
+        var savedProducer = service.save(producersToSave);
 
         Assertions.assertThat(savedProducer).isEqualTo(producersToSave).hasNoNullFieldsOrProperties();// verifica producers, confirma se é igual ao producerToSave
 
