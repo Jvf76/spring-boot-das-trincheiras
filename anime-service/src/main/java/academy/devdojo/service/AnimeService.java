@@ -32,9 +32,9 @@ public class AnimeService {
         repository.delete(anime);
     }
 
-    public Anime update(Anime animeToUpdate){
+    public void update(Anime animeToUpdate){
         assertAnimeExists(animeToUpdate.getId());
-        return repository.update(animeToUpdate);
+        repository.update(animeToUpdate);
     }
 
     public void assertAnimeExists(Long id){
