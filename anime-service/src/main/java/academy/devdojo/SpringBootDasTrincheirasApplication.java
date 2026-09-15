@@ -7,7 +7,6 @@ import org.springframework.context.annotation.ComponentScan;
 import java.util.Arrays;
 
 @SpringBootApplication
-@ComponentScan(basePackages = {"outside.devdojo", "academy.devdojo"})
 public class SpringBootDasTrincheirasApplication {
 
     public static void main(String[] args) {

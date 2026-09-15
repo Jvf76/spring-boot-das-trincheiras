@@ -7,7 +7,6 @@ import academy.devdojo.response.ProducerGetResponse;
 import academy.devdojo.service.ProducerService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -26,7 +25,7 @@ public class ProducerController {
 
 
     @GetMapping
-    public ResponseEntity<List<ProducerGetResponse>> listAll(@RequestParam(required = false) String name) {
+    public ResponseEntity<List<ProducerGetResponse>> findAll(@RequestParam(required = false) String name) {
         var producers = service.findAll(name);
 
         var response = MAPPER.toProducerGetResponseList(producers);

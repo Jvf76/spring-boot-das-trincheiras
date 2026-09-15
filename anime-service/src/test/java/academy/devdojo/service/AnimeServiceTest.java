@@ -1,7 +1,6 @@
 package academy.devdojo.service;
 
 import academy.devdojo.domain.Anime;
-import academy.devdojo.domain.Anime;
 import academy.devdojo.repository.AnimeHardCodedRepository;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.*;
@@ -12,7 +11,6 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.web.server.ResponseStatusException;
 
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -20,7 +18,7 @@ import java.util.Optional;
 import static java.util.Collections.emptyList;
 import static java.util.Collections.singletonList;
 
-@ExtendWith(MockitoExtension.class) // inicializa os objtos anotados com @Mock e @InjectMocks
+@ExtendWith(MockitoExtension.class) // inicializa os objetos anotados com @Mock e @InjectMocks
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 public class AnimeServiceTest {
     @InjectMocks
@@ -88,6 +86,7 @@ public class AnimeServiceTest {
 
         Assertions.assertThat(animes).isEqualTo(expectedAnime);
     }
+
     @Test
     @DisplayName("findById throws ResponseStatusException when is not found")
     @Order(5)
