@@ -2,6 +2,7 @@ package academy.devdojo.controller;
 
 import academy.devdojo.domain.Producer;
 import academy.devdojo.repository.ProducerData;
+import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.*;
 import org.mockito.BDDMockito;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,6 +14,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -21,6 +23,7 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 
 @WebMvcTest(controllers = ProducerController.class) // vai startar apenas o necessário para fazer o teste da camada WEB
@@ -80,11 +83,36 @@ class ProducerControllerTest {
     @Order(3)
     void findAll_ReturnsEmptyList_WhenNameIsNull() throws Exception {
         BDDMockito.when(producerData.getProducers()).thenReturn(producerList);
-        var response = readResourceFile("producer/get-producer-null-name-200.json");
-        mockMvc.perform(MockMvcRequestBuilders.get("/v1/producers"))
+        var response = readResourceFile("producer/get-producer-x-name-200.json");
+        var name = "x";
+        mockMvc.perform(MockMvcRequestBuilders.get("/v1/producers").param("name",name))
                 .andDo(MockMvcResultHandlers.print())
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.content().json(response));
+    }
+
+    @Test
+    @DisplayName("findAll return a producers witch given id")
+    @Order(4)
+    void findById_ReturnsAllProducersById_WhenSuccessful() throws Exception{
+        BDDMockito.when(producerData.getProducers()).thenReturn(producerList);
+        var response = readResourceFile("producer/get-producer-by-id-name-200.json");
+        var id = 1L;
+        mockMvc.perform(MockMvcRequestBuilders.get("/v1/producers/{id}", id))
+                .andDo(MockMvcResultHandlers.print())
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.content().json(response));
+    }
+
+    @Test
+    @DisplayName("findById throws ResponseStatusException when is not found")
+    @Order(5)
+    void findById_ThrowsResponseStatusException_WhenProducerIsNotFound() throws Exception{
+        BDDMockito.when(producerData.getProducers()).thenReturn(producerList);
+        var id = 99L;
+        mockMvc.perform(MockMvcRequestBuilders.get("/v1/producers/{id}", id))
+                .andDo(MockMvcResultHandlers.print())
+                .andExpect(MockMvcResultMatchers.status().reason("Producer not Found"));
     }
 
     private String readResourceFile(String fileName) throws IOException {
