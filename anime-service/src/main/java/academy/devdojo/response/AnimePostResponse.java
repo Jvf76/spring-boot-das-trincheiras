@@ -9,6 +9,4 @@ import lombok.Getter;
 public class AnimePostResponse {
     private Long id;
     private String name;
-
-
 }
