@@ -1,5 +1,6 @@
 package academy.devdojo.service;
 
+import academy.devdojo.commons.ProducerUtils;
 import academy.devdojo.domain.Producer;
 import academy.devdojo.repository.ProducerHardCodedRepository;
 import org.assertj.core.api.Assertions;
@@ -12,7 +13,6 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -28,13 +28,12 @@ class ProducerServiceTest {
     private ProducerHardCodedRepository repository;
     private List<Producer> producerList;
 
+    @InjectMocks
+    ProducerUtils producerUtils;
+
     @BeforeEach
     void init() {
-        var uftable = Producer.builder().id(1L).name("Mappa").createdAt(LocalDateTime.now()).build();
-        var witStudio = Producer.builder().id(2L).name("Kyoto Animation").createdAt(LocalDateTime.now()).build();
-        var studioGhibli = Producer.builder().id(3L).name("Madhouse").createdAt(LocalDateTime.now()).build();
-        producerList = new ArrayList<>(List.of(uftable, witStudio, studioGhibli));
-
+        producerList = producerUtils.newProducerList();
     }
 
     @Test

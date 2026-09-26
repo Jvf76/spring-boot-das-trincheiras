@@ -1,5 +1,6 @@
 package academy.devdojo.repository;
 
+import academy.devdojo.commons.ProducerUtils;
 import academy.devdojo.domain.Producer;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -23,13 +24,12 @@ class ProducerHardCodedRepositoryTest {
     @Mock
     private ProducerData producerData;
     private  List<Producer> producerList;
+    @InjectMocks
+    private ProducerUtils producerUtils;
 
     @BeforeEach
     void init() {
-        var uftable = Producer.builder().id(1L).name("Mappa").createdAt(LocalDateTime.now()).build();
-        var witStudio = Producer.builder().id(2L).name("Kyoto Animation").createdAt(LocalDateTime.now()).build();
-        var studioGhibli = Producer.builder().id(3L).name("Madhouse").createdAt(LocalDateTime.now()).build();
-        producerList = new ArrayList<>(List.of(uftable, witStudio, studioGhibli));
+        producerList = producerUtils.newProducerList();
 
     }
 
@@ -81,7 +81,7 @@ class ProducerHardCodedRepositoryTest {
     void save_CreatesProducer_WhenSucessful() {
         BDDMockito.when(producerData.getProducers()).thenReturn(producerList);
 
-        var producersToSave = Producer.builder().id(99L).name("MAPPA").createdAt(LocalDateTime.now()).build(); // cria o producer
+        var producersToSave = producerUtils.newProducerToSave(); // cria o producer
         var producer = repository.save(producersToSave); // salva o producer que ficou em producersToSave
 
         Assertions.assertThat(producer).isEqualTo(producersToSave).hasNoNullFieldsOrProperties();// verifica producers, confirma se é igual ao producerToSave
