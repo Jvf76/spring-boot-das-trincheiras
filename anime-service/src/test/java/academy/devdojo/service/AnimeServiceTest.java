@@ -1,5 +1,6 @@
 package academy.devdojo.service;
 
+import academy.devdojo.commons.AnimeUtils;
 import academy.devdojo.domain.Anime;
 import academy.devdojo.repository.AnimeHardCodedRepository;
 import org.assertj.core.api.Assertions;
@@ -9,6 +10,7 @@ import org.mockito.BDDMockito;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.util.ArrayList;
@@ -26,15 +28,13 @@ public class AnimeServiceTest {
     @Mock
     public AnimeHardCodedRepository repository;
     private List<Anime> animeList;
+    @Autowired
+    AnimeUtils animeUtils;
 
-    @BeforeEach
-        // prepara uma lista nova antes de cada teste
+
+    @BeforeEach// prepara uma lista nova antes de cada teste
     void init() {
-        var hunter = Anime.builder().id(1L).name("HXH").build();
-        var onePiece = Anime.builder().id(2L).name("One Piece").build();
-        var naruto = Anime.builder().id(3L).name("Naruto").build();
-        animeList = new ArrayList<>(List.of(hunter, onePiece, naruto));
-
+        animeList = animeUtils.newAnimeList();
     }
 
     @Test
