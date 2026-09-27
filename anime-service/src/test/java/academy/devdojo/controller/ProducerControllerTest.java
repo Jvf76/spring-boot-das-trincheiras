@@ -19,15 +19,12 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
 import java.util.List;
 
 
 @WebMvcTest(controllers = ProducerController.class) // vai startar apenas o necessário para fazer o teste da camada WEB
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
-@ComponentScan(basePackages = {"outside.devdojo", "academy.devdojo"})
+@ComponentScan(basePackages = {"extern.dependency", "academy.devdojo"})
 class ProducerControllerTest {
     private static final String URL = "/v1/producers";
     @Autowired

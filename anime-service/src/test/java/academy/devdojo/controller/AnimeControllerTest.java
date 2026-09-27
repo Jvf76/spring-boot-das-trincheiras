@@ -24,7 +24,7 @@ import java.util.List;
 
 @WebMvcTest(controllers = AnimeControllerTest.class) // vai startar apenas o necessário para fazer o teste da camada WEB
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
-@ComponentScan(basePackages = {"outside.devdojo", "academy.devdojo"})
+@ComponentScan(basePackages = {"extern.dependency", "academy.devdojo"})
 class AnimeControllerTest {
     private static final String URL = "/v1/animes";
     @Autowired
