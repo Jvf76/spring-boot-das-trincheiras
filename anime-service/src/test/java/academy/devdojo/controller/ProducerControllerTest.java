@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.http.MediaType;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.context.bean.override.mockito.MockitoSpyBean;
 import org.springframework.test.web.servlet.MockMvc;
@@ -24,7 +25,8 @@ import java.util.List;
 
 @WebMvcTest(controllers = ProducerController.class) // vai startar apenas o necessário para fazer o teste da camada WEB
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
-@ComponentScan(basePackages = {"extern.dependency", "academy.devdojo"})
+@ComponentScan(basePackages = {"academy.devdojo"})
+//@ActiveProfiles("test")
 class ProducerControllerTest {
     private static final String URL = "/v1/producers";
     @Autowired

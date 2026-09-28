@@ -1,26 +1,29 @@
 package academy.devdojo.Config;
 
-import academy.devdojo.external.dependency.Connection;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
+import org.springframework.context.annotation.Profile;
 
 @Configuration
 public class ConnectionConfiguration {
-    @Value("${server.database.url}")
+    @Value("${database.url}")
     private String url;
-    @Value("${server.database.password}")
-    private String password;
-    @Value("${server.database.username}")
+    @Value("${database.username}")
     private String username;
+    @Value("${database.password}")
+    private String password;
     @Bean
+//    @Profile("mysql")
+    @Primary
     public Connection connectionMySql() {
         return new Connection(url, username, password);
     }
 
-    @Bean(name = "connection")
-    @Primary
+    @Bean(name = "connectionMongoDB")
+//    @Primary
+    @Profile("mongo")
     public Connection connectionMongo() {
         return new Connection("localhost", "devdojo", "goku");
 

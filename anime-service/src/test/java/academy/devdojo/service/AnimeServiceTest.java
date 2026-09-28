@@ -11,6 +11,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.ComponentScan;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.util.ArrayList;
@@ -28,7 +29,7 @@ public class AnimeServiceTest {
     @Mock
     public AnimeHardCodedRepository repository;
     private List<Anime> animeList;
-    @Autowired
+    @InjectMocks
     AnimeUtils animeUtils;
 
 

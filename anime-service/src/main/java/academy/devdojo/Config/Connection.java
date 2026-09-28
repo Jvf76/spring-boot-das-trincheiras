@@ -1,4 +1,4 @@
-package academy.devdojo.external.dependency;
+package academy.devdojo.Config;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

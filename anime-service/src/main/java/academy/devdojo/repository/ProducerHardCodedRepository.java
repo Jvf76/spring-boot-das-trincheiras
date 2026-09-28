@@ -1,14 +1,11 @@
 package academy.devdojo.repository;
 
 import academy.devdojo.domain.Producer;
-import academy.devdojo.external.dependency.Connection;
+import academy.devdojo.Config.Connection;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Repository;
 
-import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -17,16 +14,12 @@ import java.util.Optional;
 @Log4j2
 public class ProducerHardCodedRepository {
     private final ProducerData producerData;
-    @Qualifier(value = "connectionMySql")
-    private final Connection connection;
-
 
     public List<Producer> findAll() {
         return producerData.getProducers();
     }
 
     public Optional<Producer> findById(Long id) {
-        log.debug(connection);
         return producerData.getProducers().stream().filter(producer -> producer.getId().equals(id)).findFirst();
     }
 
