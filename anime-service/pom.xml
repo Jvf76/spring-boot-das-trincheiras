@@ -49,9 +49,8 @@
                 <artifactId>maven-surefire-plugin</artifactId>
                 <version>${maven-surefire-plugin.version}</version>
                 <configuration>
-                    <argLine>-Dspring.profiles.active=test</argLine>>
+                    <argLine>-Dspring.profiles.active=test</argLine>
                 </configuration>
-
             </plugin>
 
             <plugin>
