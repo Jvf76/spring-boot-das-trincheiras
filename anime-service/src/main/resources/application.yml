@@ -22,3 +22,4 @@ database:
   url: ${DB_URL:localhost}:${DB_PORT:3006}
   username: ${LOCAL_USERNAME:}
   password: ${LOCAL_PASSWORD:}
+url:

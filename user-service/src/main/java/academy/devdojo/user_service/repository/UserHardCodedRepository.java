@@ -1,0 +1,9 @@
+package academy.devdojo.user_service.repository;
+
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Repository;
+
+@Repository
+@RequiredArgsConstructor
+public class UserHardCodedRepository {
+}
