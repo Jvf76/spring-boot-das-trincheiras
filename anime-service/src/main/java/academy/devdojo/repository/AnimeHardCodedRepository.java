@@ -23,7 +23,10 @@ public class AnimeHardCodedRepository {
     }
 
     public List<Anime> findByName(String name) {
-        return animeData.getAnimes().stream().filter(anime -> anime.getName().equalsIgnoreCase(name)).toList();
+        return animeData.getAnimes()
+                .stream()
+                .filter(anime -> anime.getName().equalsIgnoreCase(name))
+                .toList();
     }
 
     public Anime save(Anime anime) {
