@@ -34,4 +34,13 @@ public class UserHardCodedRepository {
        userData.getUsers().add(users);
        return users;
     }
+
+    public void delete(User user){
+        userData.getUsers().remove(user);
+    }
+
+    public void update(User user){
+       delete(user);
+       save(user);
+    }
 }

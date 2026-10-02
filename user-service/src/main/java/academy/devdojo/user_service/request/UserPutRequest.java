@@ -7,5 +7,5 @@ import lombok.Getter;
 @Getter
 public class UserPutRequest {
     private Long id;
-    private String name;
+    private String firstName;
 }

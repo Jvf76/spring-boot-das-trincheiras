@@ -26,4 +26,18 @@ public class UserService {
     public User saved(User user){
         return repository.save(user);
     }
+
+    public void delete(Long id){
+        var user = findByIdOrThrowNotFound(id);
+        repository.delete(user);
+    }
+
+    public void update(User userToUpdate){
+        assertAnimeExists(userToUpdate.getId());
+        repository.update(userToUpdate);
+    }
+
+    public void assertAnimeExists(Long id){
+        findByIdOrThrowNotFound(id);
+    }
 }

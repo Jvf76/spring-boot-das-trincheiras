@@ -46,7 +46,7 @@ public class AnimeController {
 
 
     @PostMapping
-    public ResponseEntity<AnimePostResponse> save(@RequestBody AnimePostRequest animePostRequest) {
+    public ResponseEntity<AnimePostResponse> saved(@RequestBody AnimePostRequest animePostRequest) {
 
         var animes = mapper.toAnime(animePostRequest);
 
