@@ -19,7 +19,7 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
 import java.util.List;
 
-@WebMvcTest(controllers = UserControllerTest.class) // vai startar apenas o necessário para fazer o teste da camada WEB
+@WebMvcTest(controllers = UserController.class) // vai startar apenas o necessário para fazer o teste da camada WEB
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 class UserControllerTest {
     private static final String URL = "/v1/users";
@@ -45,9 +45,9 @@ class UserControllerTest {
     @Test
     @DisplayName("GET v1/users return a list with all users when argument is null")
     @Order(1)
-    void findAll_ReturnsAllAnime_WhenArgumentIsNull() throws Exception {
+    void findAll_ReturnsAllUser_WhenArgumentIsNull() throws Exception {
         BDDMockito.when(userData.getUsers()).thenReturn(userList);
-        var response = fileUtils.readResourceFile("anime/get-anime-null-name-200.json");
+        var response = fileUtils.readResourceFile("users/get-user-null-name-200.json");
 
         mockMvc.perform(MockMvcRequestBuilders.get(URL))
                 .andDo(MockMvcResultHandlers.print())

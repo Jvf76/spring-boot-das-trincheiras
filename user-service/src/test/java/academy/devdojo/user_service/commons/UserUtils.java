@@ -19,7 +19,7 @@ public class UserUtils {
 
     }
 
-    public User newAnimeToSave() {
+    public User newUserToSave() {
         return User.builder().id(29L).firstName("Joao").build();
     }
 }
