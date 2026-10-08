@@ -10,8 +10,10 @@ import org.mockito.BDDMockito;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
+import java.util.Optional;
 
 import static java.util.Collections.emptyList;
 import static java.util.Collections.singletonList;
@@ -69,4 +71,43 @@ public class UserServiceTest {
         Assertions.assertThat(userFound).isEmpty();
     }
 
+
+    @Test
+    @DisplayName("findAll return a user witch given id")
+    @Order(4)
+    void findById_ReturnsAllUsersById_WhenSuccessful() {
+        var expectedUser = userList.getFirst();
+        BDDMockito.when(repository.findById(expectedUser.getId())).thenReturn(Optional.of(expectedUser));
+
+        var users = service.findByIdOrThrowNotFound(expectedUser.getId());
+
+        Assertions.assertThat(users).isEqualTo(expectedUser);
+    }
+
+    @Test
+    @DisplayName("findById throws ResponseStatusException when is not found")
+    @Order(5)
+    void findById_ThrowsResponseStatusException_WhenAnimeIsNotFound() {
+        var expectedUsers = userList.getFirst();
+        BDDMockito.when(repository.findById(expectedUsers.getId())).thenReturn(Optional.empty());
+
+        Assertions.assertThatException()
+                .isThrownBy(() -> service.findByIdOrThrowNotFound(expectedUsers.getId()))
+                .isInstanceOf(ResponseStatusException.class);
+
+
+    }
+
+    @Test
+    @DisplayName("save creates a user")
+    @Order(6)
+    void save_CreatesUser_WhenSucessful(){
+        var userToSave = User.builder().firstName("José").lastName("Silva").id(3L).email("josesilva@gmail").build();
+
+        BDDMockito.when(repository.save(userToSave)).thenReturn(userToSave);
+
+        var userSaved = service.saved(userToSave);
+
+        Assertions.assertThat(userSaved).isEqualTo(userToSave).hasNoNullFieldsOrProperties();
+    }
 }
