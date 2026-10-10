@@ -61,7 +61,7 @@ public class UserServiceTest {
     @Test
     @DisplayName("findAll returns empty List when name is not found ")
     @Order(3)
-    void find_ReturnsListEmpty_WhenNameIsNotFound(){
+    void find_ReturnsListEmpty_WhenNameIsNotFound() {
         var name = "José";
 
         BDDMockito.when(repository.findFirstName(name)).thenReturn(emptyList());
@@ -71,43 +71,55 @@ public class UserServiceTest {
         Assertions.assertThat(userFound).isEmpty();
     }
 
-
     @Test
-    @DisplayName("findAll return a user witch given id")
+    @DisplayName("findAll return a users witch given id ")
     @Order(4)
     void findById_ReturnsAllUsersById_WhenSuccessful() {
         var expectedUser = userList.getFirst();
         BDDMockito.when(repository.findById(expectedUser.getId())).thenReturn(Optional.of(expectedUser));
 
-        var users = service.findByIdOrThrowNotFound(expectedUser.getId());
+        var user = service.findByIdOrThrowNotFound(expectedUser.getId());
 
-        Assertions.assertThat(users).isEqualTo(expectedUser);
+        Assertions.assertThat(user).hasSameClassAs(expectedUser);
     }
 
     @Test
-    @DisplayName("findById throws ResponseStatusException when is not found")
+    @DisplayName("findAll return a users witch given id ")
     @Order(5)
-    void findById_ThrowsResponseStatusException_WhenAnimeIsNotFound() {
-        var expectedUsers = userList.getFirst();
-        BDDMockito.when(repository.findById(expectedUsers.getId())).thenReturn(Optional.empty());
+    void findById_ThrowsResponseStatusException_WhenUserIsNotFound(){
+        var expectedUser = userList.getFirst();
+        BDDMockito.when(repository.findById(expectedUser.getId())).thenReturn((Optional.empty()));
 
         Assertions.assertThatException()
-                .isThrownBy(() -> service.findByIdOrThrowNotFound(expectedUsers.getId()))
+                .isThrownBy(() -> service.findByIdOrThrowNotFound(expectedUser.getId()))
                 .isInstanceOf(ResponseStatusException.class);
-
 
     }
 
     @Test
     @DisplayName("save creates a user")
     @Order(6)
-    void save_CreatesUser_WhenSucessful(){
-        var userToSave = User.builder().firstName("José").lastName("Silva").id(3L).email("josesilva@gmail").build();
-
+    void save_CreatesUser_WhenSucessful() {
+        var userToSave = User.builder().id(99L).firstName("Jose").lastName("Silva").email("jose@gmail").build();
         BDDMockito.when(repository.save(userToSave)).thenReturn(userToSave);
 
         var userSaved = service.saved(userToSave);
 
         Assertions.assertThat(userSaved).isEqualTo(userToSave).hasNoNullFieldsOrProperties();
+
     }
+    @Test
+    @DisplayName("delete remove anime")
+    @Order(7)
+    void delete_RemoveAnime_WhenSuccessful(){
+        var userToDelete = userList.getFirst();
+
+        BDDMockito.when(repository.findById(userToDelete.getId())).thenReturn(Optional.of(userToDelete));
+        BDDMockito.doNothing().when(repository).delete(userToDelete);
+
+        Assertions.assertThatNoException().isThrownBy(() -> service.delete(userToDelete.getId()));
+
+
+    }
+
 }
