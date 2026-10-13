@@ -9,8 +9,8 @@ import lombok.*;
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 public class Anime {
     @EqualsAndHashCode.Include
-    Long id;
-    String name;
+    private Long id;
+    private String name;
 
 
 }

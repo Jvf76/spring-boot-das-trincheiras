@@ -6,10 +6,13 @@ import academy.devdojo.user_service.domain.User;
 import academy.devdojo.user_service.repository.UserData;
 import academy.devdojo.user_service.repository.UserHardCodedRepository;
 import org.junit.jupiter.api.*;
+import org.mockito.ArgumentMatchers;
 import org.mockito.BDDMockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.context.annotation.ComponentScan;
 import org.springframework.core.io.ResourceLoader;
+import org.springframework.http.MediaType;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.context.bean.override.mockito.MockitoSpyBean;
 import org.springframework.test.web.servlet.MockMvc;
@@ -21,6 +24,7 @@ import java.util.List;
 
 @WebMvcTest(controllers = UserController.class) // vai startar apenas o necessário para fazer o teste da camada WEB
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
+@ComponentScan(basePackages = {"extern.dependency", "academy.devdojo"})
 class UserControllerTest {
     private static final String URL = "/v1/users";
     @Autowired
@@ -33,9 +37,9 @@ class UserControllerTest {
     @Autowired
     private ResourceLoader resourceLoader;
     @Autowired
-    private UserUtils userUtils;
+    FileUtils fileUtils;
     @Autowired
-    private FileUtils fileUtils;
+    UserUtils userUtils;
 
     @BeforeEach
     void init() {
@@ -43,7 +47,7 @@ class UserControllerTest {
     }
 
     @Test
-    @DisplayName("GET v1/users return a list with all users when argument is null")
+    @DisplayName("GET v1/users return a list with all animes when argument is null")
     @Order(1)
     void findAll_ReturnsAllUser_WhenArgumentIsNull() throws Exception {
         BDDMockito.when(userData.getUsers()).thenReturn(userList);
@@ -55,5 +59,133 @@ class UserControllerTest {
                 .andExpect(MockMvcResultMatchers.content().json(response));
     }
 
+    @Test
+    @DisplayName("GET v1/animes?param=One Piece returns list with object when name exists")
+    @Order(2)
+    void findAll_ReturnsFoundUserInList_WhenNameIsFound() throws Exception {
+        BDDMockito.when(userData.getUsers()).thenReturn(userList);
+        var response = fileUtils.readResourceFile("users/get-user-joao-name-200.json");
+        var firstName = "Joao";
+        mockMvc.perform(MockMvcRequestBuilders.get(URL).param("firstName", firstName))
+                .andDo(MockMvcResultHandlers.print())
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.content().json(response));
+    }
 
+    @Test
+    @DisplayName("GET v1/joao?name=x return empty list when name is not found")
+    @Order(3)
+    void findAll_ReturnsEmptyList_WhenNameIsNull() throws Exception {
+        BDDMockito.when(userData.getUsers()).thenReturn(userList);
+        var response = fileUtils.readResourceFile("users/get-user-x-name-200.json");
+        var firstName = "x";
+        mockMvc.perform(MockMvcRequestBuilders.get(URL).param("firstName", firstName))
+                .andDo(MockMvcResultHandlers.print())
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.content().json(response));
+    }
+
+    @Test
+    @DisplayName("findAll return a user witch given id")
+    @Order(4)
+    void findById_ReturnsAllUserById_WhenSuccessful() throws Exception {
+        BDDMockito.when(userData.getUsers()).thenReturn(userList);
+        var response = fileUtils.readResourceFile("users/get-user-by-id-200.json");
+        var id = 1L;
+        mockMvc.perform(MockMvcRequestBuilders.get(URL + "/{id}", id))
+                .andDo(MockMvcResultHandlers.print())
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.content().json(response));
+    }
+
+    @Test
+    @DisplayName("findById throws ResponseStatusException when is not found")
+    @Order(5)
+    void findById_ThrowsResponseStatusException_WhenUserIsNotFound() throws Exception {
+        BDDMockito.when(userData.getUsers()).thenReturn(userList);
+        var id = 99L;
+        mockMvc.perform(MockMvcRequestBuilders.get(URL + "/{id}", id))
+                .andDo(MockMvcResultHandlers.print())
+                .andExpect(MockMvcResultMatchers.status().reason("USER NOT FOUND"));
+    }
+
+    @Test
+    @DisplayName("POST v1/animes creates a anime")
+    @Order(6)
+    void save_CreatesUsers_WhenSucessful() throws Exception {
+        var request = fileUtils.readResourceFile("users/post-request-user-200.json");
+        var response = fileUtils.readResourceFile("users/post-response-user-201.json");
+        var userToSave = userUtils.newUserToSave();
+
+        BDDMockito.when(repository.save(ArgumentMatchers.any())).thenReturn(userToSave);
+
+        mockMvc.perform(MockMvcRequestBuilders
+                        .post(URL)
+                        .content(request)
+                        .header("x-api-key", "v1")
+                        .contentType(MediaType.APPLICATION_JSON)
+                )
+                .andDo(MockMvcResultHandlers.print())
+                .andExpect(MockMvcResultMatchers.content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
+                .andExpect(MockMvcResultMatchers.status().isCreated())
+                .andExpect(MockMvcResultMatchers.content().json(response));
+    }
+
+    @Test
+    @DisplayName("PUT v1/anime updates a anime")
+    @Order(7)
+    void update_CreatesUser_WhenSucessfull() throws Exception {
+        BDDMockito.when(userData.getUsers()).thenReturn(userList);
+
+        var request = fileUtils.readResourceFile("users/put-request-user-200.json");
+        mockMvc.perform(MockMvcRequestBuilders
+                        .put(URL)
+                        .content(request)
+                        .contentType(MediaType.APPLICATION_JSON)
+                )
+                .andDo(MockMvcResultHandlers.print())
+                .andExpect(MockMvcResultMatchers.status().isNoContent());
+    }
+
+    @Test
+    @DisplayName("PUT v1/animes throws ResponseStatusxception when anime is not found")
+    @Order(8)
+    void update_ThrowsResponseStatusException_WhenUserIsNotFound() throws Exception {
+        BDDMockito.when(userData.getUsers()).thenReturn(userList);
+        var request = fileUtils.readResourceFile("users/put-request-user-404.json");
+        mockMvc.perform(MockMvcRequestBuilders
+                        .put(URL)
+                        .content(request)
+                        .contentType(MediaType.APPLICATION_JSON)
+                )
+                .andDo(MockMvcResultHandlers.print())
+                .andExpect(MockMvcResultMatchers.status().isNotFound())
+                .andExpect(MockMvcResultMatchers.status().reason("USER NOT FOUND"));
+
+    }
+
+    @Test
+    @DisplayName("DELETE v1/animes/1 remove an anime")
+    @Order(9)
+    void delete_RemoveUser_WhenSuccessful() throws Exception {
+        BDDMockito.when(userData.getUsers()).thenReturn(userList);
+        var id = userData.getUsers().getFirst().getId();
+        mockMvc.perform(MockMvcRequestBuilders.delete(URL + "/{id}", id))
+                .andDo(MockMvcResultHandlers.print())
+                .andExpect(MockMvcResultMatchers.status().isNoContent());
+
+    }
+
+    @Test
+    @DisplayName("delete remove anime")
+    @Order(10)
+    void delete_ThrowResponseStatusException_WhenUserIsNotFound() throws Exception {
+        BDDMockito.when(userData.getUsers()).thenReturn(userList);
+        var id = 99L;
+        mockMvc.perform(MockMvcRequestBuilders.delete(URL + "/{id}", id))
+                .andDo(MockMvcResultHandlers.print())
+                .andExpect(MockMvcResultMatchers.status().isNotFound())
+                .andExpect(MockMvcResultMatchers.status().reason("USER NOT FOUND"));
+
+    }
 }
