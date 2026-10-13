@@ -122,4 +122,47 @@ public class UserServiceTest {
 
     }
 
+    @Test
+    @DisplayName("delete remove user")
+    @Order(8)
+    void delete_ThrowResponseStatusException_WhenUserIsNotFound() {
+        var userToDelete = userList.getFirst();
+        BDDMockito.when(repository.findById(userToDelete.getId())).thenReturn(Optional.empty());
+
+        Assertions.assertThatException()
+                .isThrownBy(() -> service.delete(userToDelete.getId()))
+                .isInstanceOf(ResponseStatusException.class);
+
+    }
+
+    @Test
+    @DisplayName("update user")
+    @Order(9)
+    void update_UpdateAnime_WhenSucessful() {
+        var userToUpdate = userList.getFirst();
+        userToUpdate.setFirstName("GrandBlue");
+
+        BDDMockito.when(repository.findById(userToUpdate.getId())).thenReturn(Optional.of(userToUpdate));
+        BDDMockito.doNothing().when(repository).update(userToUpdate);
+
+
+        Assertions.assertThatNoException().isThrownBy(() -> service.update(userToUpdate));
+
+    }
+
+    @Test
+    @DisplayName("update anime")
+    @Order(10)
+    void update_ThrowsResponseStatusException_WhenAnimeIsNotFound() {
+        var userToUpdate = userList.getFirst();
+
+        BDDMockito.when(repository.findById(userToUpdate.getId())).thenReturn(Optional.empty());
+
+
+        Assertions.assertThatException()
+                .isThrownBy(() -> service.update(userToUpdate))
+                .isInstanceOf(ResponseStatusException.class);
+
+    }
+
 }
