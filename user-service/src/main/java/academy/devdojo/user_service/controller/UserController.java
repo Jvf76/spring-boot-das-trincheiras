@@ -6,6 +6,7 @@ import academy.devdojo.user_service.request.UserPutRequest;
 import academy.devdojo.user_service.response.UserGetResponse;
 import academy.devdojo.user_service.response.UserPostResponse;
 import academy.devdojo.user_service.service.UserService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -23,7 +24,7 @@ public class UserController {
     private final UserService service;
 
     @GetMapping
-    public ResponseEntity<List<UserGetResponse>> listAll(@RequestParam(required = false) String firstName){
+    public ResponseEntity<List<UserGetResponse>> listAll(@RequestParam(required = false) String firstName) {
         var userList = service.findAll(firstName);
 
         var response = mapper.toUserGetResponseList(userList);
@@ -33,7 +34,7 @@ public class UserController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<UserGetResponse> findById(@PathVariable Long id){
+    public ResponseEntity<UserGetResponse> findById(@PathVariable Long id) {
 
         var user = service.findByIdOrThrowNotFound(id);
 
@@ -43,7 +44,7 @@ public class UserController {
     }
 
     @PostMapping
-    public ResponseEntity<UserPostResponse> saved(@RequestBody UserPostRequest userPostRequest){
+    public ResponseEntity<UserPostResponse> saved(@RequestBody @Valid UserPostRequest userPostRequest) {
 
         var user = mapper.toUserPostRequest(userPostRequest);
 
@@ -56,14 +57,14 @@ public class UserController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<UserPostResponse> delete(@PathVariable Long id ){
+    public ResponseEntity<UserPostResponse> delete(@PathVariable Long id) {
         log.debug("Request to delete anime by id: {}", id);
         service.delete(id);
         return ResponseEntity.noContent().build();
     }
 
     @PutMapping
-    public ResponseEntity<Void> update(@RequestBody UserPutRequest request){
+    public ResponseEntity<Void> update(@RequestBody @Valid UserPutRequest request) {
         log.debug("Request to update user by id: {}", request);
 
         var user = mapper.toUserPutRequest(request);
