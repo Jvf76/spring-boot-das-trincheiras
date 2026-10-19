@@ -155,7 +155,7 @@ class UserControllerTest {
     }
 
     @Test
-    @DisplayName("PUT v1/users throws ResponseStatusxception when user is not found")
+    @DisplayName("PUT v1/users throws ThrowNotFound when user is not found")
     @Order(8)
     void update_ThrowsResponseStatusException_WhenUserIsNotFound() throws Exception {
         BDDMockito.when(userData.getUsers()).thenReturn(userList);

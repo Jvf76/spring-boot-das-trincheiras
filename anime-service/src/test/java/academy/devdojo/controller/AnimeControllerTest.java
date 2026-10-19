@@ -154,7 +154,7 @@ class AnimeControllerTest {
     }
 
     @Test
-    @DisplayName("PUT v1/animes throws ResponseStatusxception when anime is not found")
+    @DisplayName("PUT v1/animes throws ThrowNotFound when anime is not found")
     @Order(8)
     void update_ThrowsResponseStatusException_WhenAnimeIsNotFound() throws Exception {
         BDDMockito.when(animeData.getAnimes()).thenReturn(animeList);
@@ -196,10 +196,10 @@ class AnimeControllerTest {
     }
     @ParameterizedTest
     @MethodSource("postAnimeBadRequestSource")
-    @DisplayName("POST v1/users returns bad request when fields are empty")
+    @DisplayName("POST v1/animes returns bad request when fields are empty")
     @Order(11)
     void save_CreatesUsers_WhenFieldsAreEmpty(String fileName, List<String> errors) throws Exception {
-        var request = fileUtils.readResourceFile("users/%s".formatted(fileName));
+        var request = fileUtils.readResourceFile("anime/%s".formatted(fileName));
 
         var mvcResult = mockMvc.perform(MockMvcRequestBuilders
                         .post(URL)
@@ -222,7 +222,7 @@ class AnimeControllerTest {
     @DisplayName("PUT v1/animes returns bad request when fields are invalid")
     @Order(12)
     void update_ReturnsBadRequest_WhenFieldsAreInvalid(String fileName, List<String> errors) throws Exception {
-        var request = fileUtils.readResourceFile("animes/%s".formatted(fileName));
+        var request = fileUtils.readResourceFile("anime/%s".formatted(fileName));
 
         var mvcResult = mockMvc.perform(MockMvcRequestBuilders
                         .put(URL)

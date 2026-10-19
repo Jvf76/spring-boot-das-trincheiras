@@ -9,7 +9,6 @@ import lombok.ToString;
 @Getter
 @ToString
 public class AnimePostRequest {
-    private Long id;
     @NotBlank(message = "The field 'name' is required")
     private String name;
 }
