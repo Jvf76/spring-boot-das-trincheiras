@@ -25,7 +25,6 @@ import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.stream.Stream;
 
@@ -106,14 +105,15 @@ class UserControllerTest {
     }
 
     @Test
-    @DisplayName("findById throws ResponseStatusException when is not found")
+    @DisplayName("GET v1/users/1 returns with given id")
     @Order(5)
-    void findById_ThrowsResponseStatusException_WhenUserIsNotFound() throws Exception {
+    void findById_ReturnsUsersById_WhenSuccessful() throws Exception {
         BDDMockito.when(userData.getUsers()).thenReturn(userList);
+        var response = fileUtils.readResourceFile("users/get-user-by-id-404.json");
         var id = 99L;
         mockMvc.perform(MockMvcRequestBuilders.get(URL + "/{id}", id))
                 .andDo(MockMvcResultHandlers.print())
-                .andExpect(MockMvcResultMatchers.status().reason("USER NOT FOUND"));
+                .andExpect(MockMvcResultMatchers.content().json(response));
     }
 
     @Test
@@ -160,6 +160,7 @@ class UserControllerTest {
     void update_ThrowsResponseStatusException_WhenUserIsNotFound() throws Exception {
         BDDMockito.when(userData.getUsers()).thenReturn(userList);
         var request = fileUtils.readResourceFile("users/put-request-user-404.json");
+        var response = fileUtils.readResourceFile("users/put-user-by-id-404.json");
         mockMvc.perform(MockMvcRequestBuilders
                         .put(URL)
                         .content(request)
@@ -167,8 +168,7 @@ class UserControllerTest {
                 )
                 .andDo(MockMvcResultHandlers.print())
                 .andExpect(MockMvcResultMatchers.status().isNotFound())
-                .andExpect(MockMvcResultMatchers.status().reason("USER NOT FOUND"));
-
+                .andExpect(MockMvcResultMatchers.content().json(response));
     }
 
     @Test
@@ -189,10 +189,11 @@ class UserControllerTest {
     void delete_ThrowResponseStatusException_WhenUserIsNotFound() throws Exception {
         BDDMockito.when(userData.getUsers()).thenReturn(userList);
         var id = 99L;
+        var response = fileUtils.readResourceFile("users/delete-user-by-id-404.json");
         mockMvc.perform(MockMvcRequestBuilders.delete(URL + "/{id}", id))
                 .andDo(MockMvcResultHandlers.print())
                 .andExpect(MockMvcResultMatchers.status().isNotFound())
-                .andExpect(MockMvcResultMatchers.status().reason("USER NOT FOUND"));
+                .andExpect(MockMvcResultMatchers.content().json(response));
 
     }
 
@@ -268,7 +269,7 @@ class UserControllerTest {
     }
 
 
-    private static List<String> invalidEmailError(){
+    private static List<String> invalidEmailError() {
         var emailInvalidError = "The e-mail is not valid";
         return List.of(emailInvalidError);
     }
@@ -278,7 +279,7 @@ class UserControllerTest {
         var lastnameRequiredError = "The field 'lastName' is required";
         var emailRequiredError = "The field 'email' is required";
 
-        return new ArrayList<>( List.of(firstNameRequiredError, lastnameRequiredError, emailRequiredError));
+        return new ArrayList<>(List.of(firstNameRequiredError, lastnameRequiredError, emailRequiredError));
     }
 
 }

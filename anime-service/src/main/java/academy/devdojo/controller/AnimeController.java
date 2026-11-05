@@ -1,7 +1,5 @@
 package academy.devdojo.controller;
 
-import academy.devdojo.exception.DefaultErrorMessage;
-import academy.devdojo.exception.NotFoundExcpetion;
 import academy.devdojo.mapper.AnimeMapper;
 import academy.devdojo.request.AnimePostRequest;
 import academy.devdojo.request.AnimePutRequest;
@@ -24,7 +22,6 @@ import java.util.List;
 public class AnimeController {
     private final AnimeMapper mapper;
     private final AnimeService service;
-
 
 
     @GetMapping
